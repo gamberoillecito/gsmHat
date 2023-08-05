@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 # Filename: gsmHat.py
 import logging
+from loguru import logger
 import serial
 import threading
 import time
@@ -15,6 +16,12 @@ class SMS:
         self.Sender = ''
         self.Receiver = ''
         self.Date = ''
+
+    def __str__(self):
+        return '%s(%s)' % (
+            type(self).__name__,
+            ', '.join('%s=%s' % item for item in vars(self).items())
+        )
 
 class GPS:
     EarthRadius = 6371e3         # meters
@@ -63,13 +70,14 @@ class GSMHat:
         self.__baudrate = Baudrate
         self.__port = SerialPort
 
-        self.__logger = logging.getLogger(__name__)
-        self.__logger.setLevel(logging.DEBUG)
-        self.__loggerFileHandle = logging.FileHandler(Logpath)
-        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-        self.__loggerFileHandle.setFormatter(formatter)
-        self.__loggerFileHandle.setLevel(logging.DEBUG)
-        self.__logger.addHandler(self.__loggerFileHandle)
+        # self.__logger = logging.getLogger(__name__)
+        self.__logger = logger
+        # self.__logger.setLevel(logging.DEBUG)
+        # self.__loggerFileHandle = logging.FileHandler(Logpath)
+        # formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        # self.__loggerFileHandle.setFormatter(formatter)
+        # self.__loggerFileHandle.setLevel(logging.DEBUG)
+        # self.__logger.addHandler(self.__loggerFileHandle)
 
         self.__connect()
         self.__startWorking()
